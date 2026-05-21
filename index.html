@@ -524,12 +524,17 @@ function drawFrame(progress=1,animated=true,frameData=data()){
   const boxesP = easeOutCubic(clamp((p-.52)/.50,0,1));
 
   const countP = easeOutCubic(clamp((p-.28)/.58,0,1));
+  const macroCountP = easeOutCubic(clamp((p-.62)/.34,0,1));
 
   ctx.save();
 
   ctx.globalAlpha = fadeTop;
 
-  roundRect(W/2-90,95,180,72,36);
+  setFont("900",30);
+
+  const badgeWidth = clamp(ctx.measureText(d.badge).width + 64,180,760);
+
+  roundRect(W/2 - badgeWidth/2,95,badgeWidth,72,36);
 
   ctx.fillStyle = "#d7b985";
 
@@ -544,7 +549,7 @@ function drawFrame(progress=1,animated=true,frameData=data()){
     d.badge,
     W/2,
     132,
-    140,
+    badgeWidth - 52,
     30,
     "900",
     "center",
@@ -679,7 +684,7 @@ function drawFrame(progress=1,animated=true,frameData=data()){
     );
 
     fitText(
-      `${Math.round(value * countP)} g`,
+      `${Math.round(value * macroCountP)} g`,
       0,
       22,
       240,
