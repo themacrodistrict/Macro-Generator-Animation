@@ -2,18 +2,16 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TMD Macro Generator Ultra</title>
 
 <style>
+
 :root{
-  --bg:#070707;
-  --panel:#11100f;
   --gold:#d7b985;
-  --gold2:#b9955e;
-  --white:#f7f7f4;
-  --muted:#9b9286;
-  --line:rgba(215,185,133,.22);
+  --goldDark:#b9955e;
+  --bg:#050505;
+  --line:rgba(215,185,133,.2);
 }
 
 *{
@@ -22,9 +20,9 @@
 
 body{
   margin:0;
-  background:radial-gradient(circle at 50% 15%,#1a1712 0%,#050505 48%,#000 100%);
-  color:var(--white);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#000;
+  color:#fff;
+  font-family:Inter,Arial,sans-serif;
 }
 
 .app{
@@ -34,47 +32,33 @@ body{
 }
 
 .controls{
-  padding:22px;
-  background:rgba(8,8,8,.92);
+  background:#0b0b0b;
   border-right:1px solid var(--line);
-  overflow:auto;
+  padding:24px;
 }
 
 .controls h1{
-  font-size:22px;
-  margin:0 0 6px;
-}
-
-.controls p{
-  color:var(--muted);
-  margin:0 0 20px;
-  line-height:1.35;
+  margin:0 0 10px;
 }
 
 label{
   display:block;
-  font-size:12px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--gold);
   margin:14px 0 6px;
+  font-size:12px;
+  color:var(--gold);
+  text-transform:uppercase;
   font-weight:800;
 }
 
-input,select{
+input{
   width:100%;
-  height:44px;
+  height:46px;
   border-radius:14px;
   border:1px solid var(--line);
   background:#111;
   color:#fff;
   padding:0 14px;
   font-size:15px;
-  outline:none;
-}
-
-input:focus,select:focus{
-  border-color:var(--gold);
 }
 
 .grid2{
@@ -85,17 +69,17 @@ input:focus,select:focus{
 
 button{
   width:100%;
-  height:48px;
+  height:50px;
   border:0;
   border-radius:999px;
-  margin-top:12px;
+  margin-top:14px;
   font-weight:900;
   cursor:pointer;
 }
 
 .primary{
-  background:linear-gradient(135deg,var(--gold),#f1d9a6);
-  color:#090909;
+  background:linear-gradient(135deg,var(--gold),#f0d7a3);
+  color:#000;
 }
 
 .secondary{
@@ -104,20 +88,19 @@ button{
   border:1px solid var(--line);
 }
 
-.preview-wrap{
+.preview{
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding:28px;
+  align-items:center;
+  padding:30px;
 }
 
 .phone{
   width:min(420px,92vw);
   aspect-ratio:9/16;
-  border-radius:28px;
+  border-radius:32px;
   overflow:hidden;
-  box-shadow:0 30px 100px rgba(0,0,0,.65);
-  background:#000;
+  box-shadow:0 30px 100px rgba(0,0,0,.7);
 }
 
 canvas{
@@ -127,6 +110,7 @@ canvas{
 }
 
 @media(max-width:850px){
+
   .app{
     grid-template-columns:1fr;
   }
@@ -135,7 +119,9 @@ canvas{
     border-right:0;
     border-bottom:1px solid var(--line);
   }
+
 }
+
 </style>
 </head>
 
@@ -143,58 +129,59 @@ canvas{
 
 <div class="app">
 
-<section class="controls">
+<div class="controls">
 
-<h1>TMD Macro Generator Ultra</h1>
-<p>Ultra Premium Animated Macro Overlay</p>
+<h1>TMD Macro Generator</h1>
 
 <label>Badge</label>
-<input id="badge" value="Recipe" />
+<input id="badge" value="Recipe">
 
 <label>Titel</label>
-<input id="title" value="FRENCH TOAST" />
+<input id="title" value="FRENCH TOAST">
 
 <label>Untertitel</label>
-<input id="subtitle" value="High Protein Edition" />
+<input id="subtitle" value="High Protein Edition">
 
 <div class="grid2">
+
 <div>
-<label>Kcal</label>
-<input id="kcal" type="number" value="512" />
+<label>KCAL</label>
+<input id="kcal" type="number" value="512">
 </div>
 
 <div>
 <label>Portion</label>
-<input id="portion" value="Per serving" />
+<input id="portion" value="Per serving">
 </div>
+
 </div>
 
 <div class="grid2">
+
 <div>
 <label>Protein</label>
-<input id="protein" type="number" value="42" />
+<input id="protein" type="number" value="42">
 </div>
 
 <div>
 <label>Carbs</label>
-<input id="carbs" type="number" value="58" />
+<input id="carbs" type="number" value="58">
 </div>
+
 </div>
 
 <div class="grid2">
+
 <div>
 <label>Fat</label>
-<input id="fat" type="number" value="12" />
+<input id="fat" type="number" value="12">
 </div>
 
 <div>
-<label>Dauer</label>
-<select id="duration">
-<option value="2200">2.2 Sekunden</option>
-<option value="3000" selected>3 Sekunden</option>
-<option value="4000">4 Sekunden</option>
-</select>
+<label>Animations Dauer (Sekunden)</label>
+<input id="duration" type="number" value="3" min="1" step="0.5">
 </div>
+
 </div>
 
 <button class="primary" onclick="downloadPNG()">
@@ -202,26 +189,27 @@ Download PNG
 </button>
 
 <button class="primary" onclick="downloadVideo()">
-Download Video WEBM
+Download Video
 </button>
 
 <button class="secondary" onclick="restart()">
-Animation neu starten
+Animation Neustarten
 </button>
 
-</section>
+</div>
 
-<main class="preview-wrap">
+<div class="preview">
 
 <div class="phone">
 <canvas id="canvas" width="1080" height="1920"></canvas>
 </div>
 
-</main>
+</div>
 
 </div>
 
 <script>
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -236,28 +224,36 @@ watermark.src = "watermark.png";
 let start = performance.now();
 
 function data(){
-  return {
+
+  return{
+
     badge:$("badge").value,
     title:$("title").value,
     subtitle:$("subtitle").value,
+
     kcal:+$("kcal").value,
     portion:$("portion").value,
+
     protein:+$("protein").value,
     carbs:+$("carbs").value,
     fat:+$("fat").value,
-    duration:+$("duration").value,
+
+    duration:(+$("duration").value || 3) * 1000,
     hold:1500
-  }
+
+  };
 }
 
 function easeOutCubic(t){
-  return 1-Math.pow(1-t,3);
+  return 1 - Math.pow(1 - t,3);
 }
 
 function easeOutBack(t){
-  const c1=1.70158;
-  const c3=c1+1;
-  return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);
+
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+
+  return 1 + c3 * Math.pow(t - 1,3) + c1 * Math.pow(t - 1,2);
 }
 
 function clamp(n,a,b){
@@ -265,54 +261,65 @@ function clamp(n,a,b){
 }
 
 function roundRect(x,y,w,h,r){
+
   ctx.beginPath();
+
   ctx.moveTo(x+r,y);
+
   ctx.arcTo(x+w,y,x+w,y+h,r);
   ctx.arcTo(x+w,y+h,x,y+h,r);
   ctx.arcTo(x,y+h,x,y,r);
   ctx.arcTo(x,y,x+w,y,r);
+
   ctx.closePath();
 }
 
 function fitText(text,x,y,maxWidth,size,weight="900",align="center",color="#fff"){
-  ctx.textAlign=align;
-  ctx.textBaseline="middle";
-  ctx.fillStyle=color;
 
-  let s=size;
+  ctx.textAlign = align;
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = color;
+
+  let s = size;
 
   do{
-    ctx.font=`${weight} ${s}px Inter, Arial`;
-    s-=2;
-  }
-  while(ctx.measureText(text).width>maxWidth && s>18);
+
+    ctx.font = `${weight} ${s}px Inter, Arial`;
+    s -= 2;
+
+  }while(ctx.measureText(text).width > maxWidth && s > 18);
 
   ctx.fillText(text,x,y);
 }
 
-function drawFrame(progress=1, animated=true){
-  const d=data();
-  const p=animated ? progress : 1;
+function drawFrame(progress=1,animated=true){
+
+  const d = data();
+  const p = animated ? progress : 1;
 
   ctx.clearRect(0,0,W,H);
 
-  const bg=ctx.createRadialGradient(W/2,220,20,W/2,H/2,1100);
-  bg.addColorStop(0,"#181510");
-  bg.addColorStop(.38,"#070707");
+  const bg = ctx.createRadialGradient(W/2,220,20,W/2,H/2,1200);
+
+  bg.addColorStop(0,"#1b1812");
+  bg.addColorStop(.4,"#070707");
   bg.addColorStop(1,"#000");
 
-  ctx.fillStyle=bg;
+  ctx.fillStyle = bg;
   ctx.fillRect(0,0,W,H);
 
   ctx.save();
 
-  ctx.globalAlpha=.08;
+  ctx.globalAlpha = .08;
+
   ctx.translate(W/2,1300);
+
   ctx.rotate(-0.07 + Math.sin(p*Math.PI*2)*0.01);
 
-  const size = 720;
+  const size = 950;
 
   if(watermark.complete){
+
     ctx.drawImage(
       watermark,
       -size/2,
@@ -320,11 +327,12 @@ function drawFrame(progress=1, animated=true){
       size,
       size
     );
+
   }
 
   ctx.restore();
 
-  const glowPulse = .85 + .15*Math.sin(p*Math.PI*2);
+  const glowPulse = .85 + .15 * Math.sin(p*Math.PI*2);
 
   const circleP = easeOutBack(clamp((p-.16)/.45,0,1));
   const fadeTop = easeOutCubic(clamp(p/.35,0,1));
@@ -332,200 +340,225 @@ function drawFrame(progress=1, animated=true){
   const countP = easeOutCubic(clamp((p-.28)/.58,0,1));
 
   ctx.save();
-  ctx.globalAlpha=fadeTop;
+
+  ctx.globalAlpha = fadeTop;
 
   roundRect(W/2-90,95,180,72,36);
 
-  ctx.fillStyle="#d7b985";
-  ctx.shadowColor="rgba(215,185,133,.28)";
-  ctx.shadowBlur=28;
+  ctx.fillStyle = "#d7b985";
+
+  ctx.shadowColor = "rgba(215,185,133,.3)";
+  ctx.shadowBlur = 30;
 
   ctx.fill();
 
-  ctx.shadowBlur=0;
+  ctx.shadowBlur = 0;
 
-  fitText(d.badge,W/2,132,140,30,"900","center","#0a0a0a");
+  fitText(
+    d.badge,
+    W/2,
+    132,
+    140,
+    30,
+    "900",
+    "center",
+    "#000"
+  );
 
   ctx.restore();
 
   ctx.save();
-  ctx.globalAlpha=fadeTop;
+
+  ctx.globalAlpha = fadeTop;
 
   fitText(
     d.title.toUpperCase(),
     W/2,
     330,
-    780,
-    78,
+    800,
+    82,
     "950"
   );
 
   fitText(
     d.subtitle,
     W/2,
-    420,
+    430,
     760,
-    42,
+    44,
     "800",
     "center",
-    "#b9955e"
+    "#cfa55f"
   );
 
   ctx.restore();
 
   ctx.save();
 
-  ctx.translate(W/2,775);
+  ctx.translate(W/2,780);
+
   ctx.scale(circleP,circleP);
 
-  const cg=ctx.createRadialGradient(0,-80,80,0,0,330);
+  const cg = ctx.createRadialGradient(0,-80,80,0,0,340);
 
-  cg.addColorStop(0,"#ead3a6");
-  cg.addColorStop(1,"#cfad76");
+  cg.addColorStop(0,"#f3dfb7");
+  cg.addColorStop(1,"#d4b07a");
 
   ctx.beginPath();
-  ctx.arc(0,0,285,0,Math.PI*2);
 
-  ctx.fillStyle=cg;
+  ctx.arc(0,0,290,0,Math.PI*2);
 
-  ctx.shadowColor=`rgba(215,185,133,${.30*glowPulse})`;
-  ctx.shadowBlur=70;
+  ctx.fillStyle = cg;
+
+  ctx.shadowColor = `rgba(215,185,133,${.3*glowPulse})`;
+  ctx.shadowBlur = 80;
 
   ctx.fill();
 
-  ctx.shadowBlur=0;
+  ctx.shadowBlur = 0;
 
   fitText(
-    Math.round(d.kcal*countP).toString(),
+    Math.round(d.kcal * countP).toString(),
     0,
-    -38,
-    430,
-    132,
+    -40,
+    450,
+    138,
     "950",
     "center",
-    "#080808"
+    "#000"
   );
 
   fitText(
     "KCAL",
     0,
-    72,
-    240,
+    75,
+    250,
     38,
     "950",
     "center",
-    "#080808"
+    "#000"
   );
 
   fitText(
     d.portion,
     0,
-    160,
-    360,
+    165,
+    340,
     28,
-    "650",
+    "700",
     "center",
-    "#2b261f"
+    "#3b3227"
   );
 
   ctx.restore();
 
-  function box(x,y,label,value){
+  function macroBox(x,y,label,value){
+
     ctx.save();
 
-    ctx.translate(x,y + (1-boxesP)*85);
+    ctx.translate(x,y + (1-boxesP)*90);
 
-    ctx.globalAlpha=boxesP;
+    ctx.globalAlpha = boxesP;
 
-    roundRect(-155,-58,310,116,58);
+    roundRect(-160,-58,320,116,58);
 
-    ctx.fillStyle="rgba(18,18,18,.82)";
-    ctx.strokeStyle="rgba(215,185,133,.20)";
-    ctx.lineWidth=2;
+    ctx.fillStyle = "rgba(18,18,18,.85)";
+    ctx.strokeStyle = "rgba(215,185,133,.22)";
+    ctx.lineWidth = 2;
 
-    ctx.shadowColor="rgba(0,0,0,.55)";
-    ctx.shadowBlur=30;
+    ctx.shadowColor = "rgba(0,0,0,.5)";
+    ctx.shadowBlur = 30;
 
     ctx.fill();
     ctx.stroke();
 
-    ctx.shadowBlur=0;
+    ctx.shadowBlur = 0;
 
     fitText(
       label,
       0,
-      -24,
-      210,
+      -22,
+      220,
       20,
       "900",
       "center",
-      "#b9955e"
+      "#cfa55f"
     );
 
     fitText(
-      `${Math.round(value*countP)} g`,
+      `${Math.round(value * countP)} g`,
       0,
       22,
-      230,
-      44,
+      240,
+      46,
       "950"
     );
 
     ctx.restore();
   }
 
-  box(200,1135,"PROTEIN",d.protein);
-  box(540,1135,"CARBS",d.carbs);
-  box(880,1135,"FAT",d.fat);
+  macroBox(200,1140,"PROTEIN",d.protein);
+  macroBox(540,1140,"CARBS",d.carbs);
+  macroBox(880,1140,"FAT",d.fat);
 
   ctx.save();
 
-  ctx.globalAlpha=.72*fadeTop;
+  ctx.globalAlpha = .72 * fadeTop;
 
   fitText(
     "@TheMacroDistrict",
     W/2,
     1780,
-    620,
+    600,
     28,
     "700",
     "center",
-    "#c9c2b8"
+    "#ddd"
   );
 
   ctx.restore();
 }
 
 function loop(now){
-  const d=data();
+
+  const d = data();
+
   const total = d.duration + d.hold;
+
   const elapsed = (now - start) % total;
 
   let p;
 
   if(elapsed <= d.duration){
+
     p = elapsed / d.duration;
-  } else {
+
+  }else{
+
     p = 1;
+
   }
 
   drawFrame(p,true);
+
   requestAnimationFrame(loop);
 }
 
 function restart(){
-  start=performance.now();
+  start = performance.now();
 }
 
 requestAnimationFrame(loop);
 
 function downloadPNG(){
+
   drawFrame(1,false);
 
-  const a=document.createElement("a");
+  const a = document.createElement("a");
 
-  a.download="tmd-macro-card.png";
-  a.href=canvas.toDataURL("image/png");
+  a.download = "tmd-macro-card.png";
+
+  a.href = canvas.toDataURL("image/png");
 
   a.click();
 
@@ -533,34 +566,42 @@ function downloadPNG(){
 }
 
 async function downloadVideo(){
-  const d=data();
 
-  const fps=60;
+  const d = data();
+
+  const fps = 60;
+
   const totalDuration = d.duration + d.hold;
 
-  const stream=canvas.captureStream(fps);
+  const stream = canvas.captureStream(fps);
 
-  const recorder=new MediaRecorder(stream,{
+  const recorder = new MediaRecorder(stream,{
     mimeType:"video/webm"
   });
 
-  const chunks=[];
+  const chunks = [];
 
-  recorder.ondataavailable=e=>{
-    if(e.data.size) chunks.push(e.data);
+  recorder.ondataavailable = e=>{
+
+    if(e.data.size){
+
+      chunks.push(e.data);
+
+    }
   };
 
-  recorder.onstop=()=>{
-    const blob=new Blob(chunks,{
+  recorder.onstop = ()=>{
+
+    const blob = new Blob(chunks,{
       type:"video/webm"
     });
 
-    const url=URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
-    const a=document.createElement("a");
+    const a = document.createElement("a");
 
-    a.href=url;
-    a.download="tmd-macro-animation.webm";
+    a.href = url;
+    a.download = "tmd-macro-animation.webm";
 
     a.click();
 
@@ -569,26 +610,37 @@ async function downloadVideo(){
     restart();
   };
 
+  restart();
+
   recorder.start();
 
-  const frames=Math.ceil((totalDuration/1000)*fps);
+  const frames = Math.ceil((totalDuration/1000) * fps);
 
   for(let i=0;i<=frames;i++){
+
     const currentMs = (i / frames) * totalDuration;
 
     let p;
 
     if(currentMs <= d.duration){
+
       p = currentMs / d.duration;
-    } else {
+
+    }else{
+
       p = 1;
+
     }
 
     drawFrame(p,true);
 
-    await new Promise(r=>setTimeout(r,1000/fps));
+    await new Promise(r=>requestAnimationFrame(r));
   }
 
   recorder.stop();
 }
+
 </script>
+
+</body>
+</html>
