@@ -495,7 +495,7 @@ function drawFrame(progress=1,animated=true,frameData=data()){
 
   ctx.globalAlpha = .08;
 
-  ctx.translate(W/2,1300);
+  ctx.translate(W/2,1370);
 
   ctx.rotate(-0.07 + Math.sin(p*Math.PI*2)*0.01);
 
@@ -695,20 +695,147 @@ function drawFrame(progress=1,animated=true,frameData=data()){
   macroBox(540,1230,"CARBS",d.carbs);
   macroBox(880,1230,"FAT",d.fat);
 
+  /* Ultra Premium Socials */
+  const socialP = easeOutCubic(clamp((p-.72)/.28,0,1));
+  const iconPulse = .85 + .15 * Math.sin(p * Math.PI * 2);
+
   ctx.save();
 
-  ctx.globalAlpha = .72 * fadeTop;
+  ctx.globalAlpha = socialP;
+  ctx.translate(0,(1-socialP)*55);
+
+  function drawYoutubeIcon(){
+
+    ctx.beginPath();
+    ctx.moveTo(-7,-10);
+    ctx.lineTo(-7,10);
+    ctx.lineTo(11,0);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawTikTokIcon(){
+
+    ctx.beginPath();
+    ctx.moveTo(-3,-14);
+    ctx.lineTo(5,-14);
+    ctx.lineTo(5,1);
+    ctx.bezierCurveTo(5,10,-2,15,-10,13);
+    ctx.bezierCurveTo(-18,11,-18,0,-8,-1);
+    ctx.bezierCurveTo(-5,-1,-2,0,-1,2);
+    ctx.lineTo(-1,-14);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(5,-14);
+    ctx.bezierCurveTo(8,-7,12,-4,18,-4);
+    ctx.lineTo(18,4);
+    ctx.bezierCurveTo(13,4,9,2,5,-2);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawInstagramIcon(){
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#070707";
+
+    roundRect(-11,-11,22,22,6);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0,0,5,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(7,-7,2.2,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  function socialIcon(x,y,type,delay=0){
+
+    const localP = easeOutBack(clamp((p - .72 - delay) / .22,0,1));
+
+    ctx.save();
+
+    ctx.translate(x,y + (1-localP)*35);
+    ctx.scale(localP,localP);
+
+    ctx.shadowColor = `rgba(215,185,133,${.35*iconPulse})`;
+    ctx.shadowBlur = 26;
+
+    ctx.beginPath();
+    ctx.arc(0,0,25,0,Math.PI*2);
+    ctx.fillStyle = "rgba(215,185,133,.95)";
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+
+    ctx.beginPath();
+    ctx.arc(0,0,25,0,Math.PI*2);
+    ctx.strokeStyle = "rgba(255,255,255,.22)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#070707";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    if(type === "youtube"){
+
+      drawYoutubeIcon();
+    }
+
+    if(type === "tiktok"){
+
+      drawTikTokIcon();
+    }
+
+    if(type === "instagram"){
+
+      drawInstagramIcon();
+    }
+
+    ctx.restore();
+  }
+
+  socialIcon(W/2 - 95,1735,"youtube",0);
+  socialIcon(W/2,1735,"tiktok",.05);
+  socialIcon(W/2 + 95,1735,"instagram",.10);
+
+  const handleP = easeOutCubic(clamp((p-.82)/.24,0,1));
+
+  ctx.save();
+
+  ctx.globalAlpha = handleP;
+  ctx.translate(0,(1-handleP)*35);
+
+  ctx.shadowColor = "rgba(215,185,133,.18)";
+  ctx.shadowBlur = 18;
 
   fitText(
     "@TheMacroDistrict",
     W/2,
-    1780,
-    600,
-    28,
-    "700",
+    1812,
+    640,
+    34,
+    "850",
     "center",
-    "#ddd"
+    "#f1e6d1"
   );
+
+  ctx.shadowBlur = 0;
+
+  ctx.globalAlpha = handleP * .55;
+  ctx.beginPath();
+  ctx.moveTo(W/2 - 145,1852);
+  ctx.lineTo(W/2 + 145,1852);
+  ctx.strokeStyle = "rgba(215,185,133,.55)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.restore();
 
   ctx.restore();
 }
