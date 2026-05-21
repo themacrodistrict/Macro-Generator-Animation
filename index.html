@@ -916,6 +916,41 @@ function progressFromTime(ms,d){
   return ms <= d.duration ? ms / d.duration : 1;
 }
 
+function getVideoFormat(){
+
+  const formats = [
+    {
+      mimeType:"video/mp4;codecs=avc1.42E01E",
+      extension:"mp4"
+    },
+    {
+      mimeType:"video/mp4",
+      extension:"mp4"
+    },
+    {
+      mimeType:"video/webm;codecs=vp9",
+      extension:"webm"
+    },
+    {
+      mimeType:"video/webm;codecs=vp8",
+      extension:"webm"
+    },
+    {
+      mimeType:"video/webm",
+      extension:"webm"
+    }
+  ];
+
+  return formats.find(format=>MediaRecorder.isTypeSupported(format.mimeType)) || formats[formats.length - 1];
+}
+
+function updateVideoButtonLabel(){
+
+  const format = getVideoFormat();
+
+  $("downloadVideo").textContent = format.extension === "mp4" ? "Download MP4" : "Download WebM";
+}
+
 async function downloadPNG(){
 
   await waitForAssets();
@@ -959,10 +994,11 @@ async function downloadVideo(){
 
     stream = canvas.captureStream(fps);
 
-    const preferredType = "video/webm;codecs=vp9";
-    const fallbackType = "video/webm";
-    const mimeType = MediaRecorder.isTypeSupported(preferredType) ? preferredType : fallbackType;
-    const recorder = new MediaRecorder(stream,{ mimeType });
+    const format = getVideoFormat();
+    const recorder = new MediaRecorder(stream,{
+      mimeType:format.mimeType,
+      videoBitsPerSecond:12000000
+    });
     const chunks = [];
 
     recorder.ondataavailable = e=>{
@@ -992,9 +1028,9 @@ async function downloadVideo(){
     recorder.stop();
     await stopped;
 
-    const blob = new Blob(chunks,{ type:mimeType });
+    const blob = new Blob(chunks,{ type:format.mimeType });
 
-    downloadBlob(blob,"tmd-macro-animation.webm");
+    downloadBlob(blob,`tmd-macro-animation.${format.extension}`);
 
   }finally{
 
@@ -1012,6 +1048,7 @@ $("downloadPng").addEventListener("click",downloadPNG);
 $("downloadVideo").addEventListener("click",downloadVideo);
 $("restartAnimation").addEventListener("click",restart);
 
+updateVideoButtonLabel();
 startLoop();
 
 </script>
