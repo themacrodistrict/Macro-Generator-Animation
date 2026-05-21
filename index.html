@@ -336,7 +336,10 @@ function drawFrame(progress=1,animated=true){
 
   const circleP = easeOutBack(clamp((p-.16)/.45,0,1));
   const fadeTop = easeOutCubic(clamp(p/.35,0,1));
-  const boxesP = easeOutBack(clamp((p-.45)/.38,0,1));
+
+  /* Smoothere Macro Animation */
+  const boxesP = easeOutCubic(clamp((p-.52)/.50,0,1));
+
   const countP = easeOutCubic(clamp((p-.28)/.58,0,1));
 
   ctx.save();
@@ -456,7 +459,8 @@ function drawFrame(progress=1,animated=true){
 
     ctx.save();
 
-    ctx.translate(x,y + (1-boxesP)*90);
+    /* Weiter unten starten */
+    ctx.translate(x,y + (1-boxesP)*180);
 
     ctx.globalAlpha = boxesP;
 
@@ -497,9 +501,10 @@ function drawFrame(progress=1,animated=true){
     ctx.restore();
   }
 
-  macroBox(200,1140,"PROTEIN",d.protein);
-  macroBox(540,1140,"CARBS",d.carbs);
-  macroBox(880,1140,"FAT",d.fat);
+  /* Mehr Abstand zum Kreis */
+  macroBox(200,1230,"PROTEIN",d.protein);
+  macroBox(540,1230,"CARBS",d.carbs);
+  macroBox(880,1230,"FAT",d.fat);
 
   ctx.save();
 
@@ -641,6 +646,5 @@ async function downloadVideo(){
 }
 
 </script>
-
 </body>
 </html>
