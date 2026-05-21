@@ -222,7 +222,6 @@ Animation neu starten
 </div>
 
 <script>
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -230,6 +229,9 @@ const W = canvas.width;
 const H = canvas.height;
 
 const $ = id => document.getElementById(id);
+
+const watermark = new Image();
+watermark.src = "watermark.png";
 
 let start = performance.now();
 
@@ -243,7 +245,8 @@ function data(){
     protein:+$("protein").value,
     carbs:+$("carbs").value,
     fat:+$("fat").value,
-    duration:+$("duration").value
+    duration:+$("duration").value,
+    hold:1500
   }
 }
 
@@ -272,7 +275,6 @@ function roundRect(x,y,w,h,r){
 }
 
 function fitText(text,x,y,maxWidth,size,weight="900",align="center",color="#fff"){
-
   ctx.textAlign=align;
   ctx.textBaseline="middle";
   ctx.fillStyle=color;
@@ -289,14 +291,12 @@ function fitText(text,x,y,maxWidth,size,weight="900",align="center",color="#fff"
 }
 
 function drawFrame(progress=1, animated=true){
-
   const d=data();
-  const p=animated?progress:1;
+  const p=animated ? progress : 1;
 
   ctx.clearRect(0,0,W,H);
 
   const bg=ctx.createRadialGradient(W/2,220,20,W/2,H/2,1100);
-
   bg.addColorStop(0,"#181510");
   bg.addColorStop(.38,"#070707");
   bg.addColorStop(1,"#000");
@@ -306,15 +306,21 @@ function drawFrame(progress=1, animated=true){
 
   ctx.save();
 
-  ctx.globalAlpha=.10;
+  ctx.globalAlpha=.08;
   ctx.translate(W/2,1300);
-  ctx.rotate(-0.07);
+  ctx.rotate(-0.07 + Math.sin(p*Math.PI*2)*0.01);
 
-  ctx.font="900 520px Inter";
-  ctx.textAlign="center";
-  ctx.fillStyle="#d7b985";
+  const size = 720;
 
-  ctx.fillText("TMD",0,0);
+  if(watermark.complete){
+    ctx.drawImage(
+      watermark,
+      -size/2,
+      -size/2,
+      size,
+      size
+    );
+  }
 
   ctx.restore();
 
@@ -326,7 +332,6 @@ function drawFrame(progress=1, animated=true){
   const countP = easeOutCubic(clamp((p-.28)/.58,0,1));
 
   ctx.save();
-
   ctx.globalAlpha=fadeTop;
 
   roundRect(W/2-90,95,180,72,36);
@@ -344,7 +349,6 @@ function drawFrame(progress=1, animated=true){
   ctx.restore();
 
   ctx.save();
-
   ctx.globalAlpha=fadeTop;
 
   fitText(
@@ -427,7 +431,6 @@ function drawFrame(progress=1, animated=true){
   ctx.restore();
 
   function box(x,y,label,value){
-
     ctx.save();
 
     ctx.translate(x,y + (1-boxesP)*85);
@@ -494,13 +497,19 @@ function drawFrame(progress=1, animated=true){
 }
 
 function loop(now){
-
   const d=data();
+  const total = d.duration + d.hold;
+  const elapsed = (now - start) % total;
 
-  const p=((now-start)%d.duration)/d.duration;
+  let p;
+
+  if(elapsed <= d.duration){
+    p = elapsed / d.duration;
+  } else {
+    p = 1;
+  }
 
   drawFrame(p,true);
-
   requestAnimationFrame(loop);
 }
 
@@ -511,13 +520,11 @@ function restart(){
 requestAnimationFrame(loop);
 
 function downloadPNG(){
-
   drawFrame(1,false);
 
   const a=document.createElement("a");
 
   a.download="tmd-macro-card.png";
-
   a.href=canvas.toDataURL("image/png");
 
   a.click();
@@ -526,10 +533,10 @@ function downloadPNG(){
 }
 
 async function downloadVideo(){
-
   const d=data();
 
   const fps=60;
+  const totalDuration = d.duration + d.hold;
 
   const stream=canvas.captureStream(fps);
 
@@ -544,7 +551,6 @@ async function downloadVideo(){
   };
 
   recorder.onstop=()=>{
-
     const blob=new Blob(chunks,{
       type:"video/webm"
     });
@@ -565,19 +571,24 @@ async function downloadVideo(){
 
   recorder.start();
 
-  const frames=Math.ceil((d.duration/1000)*fps);
+  const frames=Math.ceil((totalDuration/1000)*fps);
 
   for(let i=0;i<=frames;i++){
+    const currentMs = (i / frames) * totalDuration;
 
-    drawFrame(i/frames,true);
+    let p;
+
+    if(currentMs <= d.duration){
+      p = currentMs / d.duration;
+    } else {
+      p = 1;
+    }
+
+    drawFrame(p,true);
 
     await new Promise(r=>setTimeout(r,1000/fps));
   }
 
   recorder.stop();
 }
-
 </script>
-
-</body>
-</html>
