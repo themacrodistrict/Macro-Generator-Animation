@@ -897,6 +897,28 @@ function downloadBlob(blob,fileName){
   setTimeout(()=>URL.revokeObjectURL(url),500);
 }
 
+function fileNamePart(value,fallback){
+
+  const cleanValue = String(value ?? "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-zA-Z0-9]+/g," ")
+    .trim()
+    .replace(/\s+/g,"-");
+
+  return cleanValue || fallback;
+}
+
+function exportFileName(d,extension){
+
+  const title = fileNamePart(d.title,"macro-card");
+  const subtitle = fileNamePart(d.subtitle,"");
+  const baseName = subtitle ? `${title}-${subtitle}` : title;
+  const shortName = baseName.slice(0,90).replace(/-+$/,"");
+
+  return `${shortName || "macro-card"}.${extension}`;
+}
+
 function canvasToBlob(type){
 
   return new Promise(resolve=>canvas.toBlob(resolve,type));
@@ -964,7 +986,7 @@ async function downloadPNG(){
 
   if(blob){
 
-    downloadBlob(blob,"tmd-macro-card.png");
+    downloadBlob(blob,exportFileName(d,"png"));
   }
 
   restart();
@@ -1030,7 +1052,7 @@ async function downloadVideo(){
 
     const blob = new Blob(chunks,{ type:format.mimeType });
 
-    downloadBlob(blob,`tmd-macro-animation.${format.extension}`);
+    downloadBlob(blob,exportFileName(d,format.extension));
 
   }finally{
 
